@@ -27,23 +27,28 @@
         .file-upload-btn { background: #2196F3; flex: 1; min-width: 140px; }
         .geo-btn { background: #ff9800; width: 100%; margin-top: 5px; }
 
-        /* Report Styles for Print */
+        /* Report Styles */
         #report-preview { background: #222; padding: 10px; margin-top: 15px; border-radius: 8px; overflow-y: scroll; height: 50vh; }
         .report-page { background: #fff; color: #000; width: 100%; max-width: 210mm; margin: 0 auto 20px auto; padding: 20px; box-sizing: border-box; box-shadow: 0 4px 8px rgba(0,0,0,0.5); text-align: center; }
         .report-header { border-bottom: 2px solid #d32f2f; padding-bottom: 10px; margin-bottom: 20px; }
         .report-header h1 { margin: 0; color: #d32f2f; font-size: 28px; }
-        .client-info { text-align: left; font-size: 14px; line-height: 1.6; margin-bottom: 20px; background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #eee; }
-        .numerology-box { background: #e8f5e9; border: 1px solid #4caf50; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; }
+        .client-info { text-align: left; font-size: 14px; line-height: 1.6; margin-bottom: 15px; background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #eee; }
+        
+        .numerology-container { display: flex; justify-content: space-around; align-items: center; background: #e8f5e9; border: 1px solid #4caf50; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .loshu-table { border-collapse: collapse; background: #fff; margin: 0 auto; }
+        .loshu-table td { border: 2px solid #333; width: 40px; height: 40px; text-align: center; font-size: 18px; font-weight: bold; color: #d32f2f; }
+        .num-details { text-align: left; font-size: 15px; font-weight: bold; }
+
         .map-img { width: 100%; max-width: 600px; border: 2px solid #333; margin-top: 10px; }
-        .page-title { color: #d32f2f; font-size: 22px; margin: 15px 0; }
+        .page-title { color: #d32f2f; font-size: 22px; margin: 15px 0; font-weight: bold;}
 
         @media print {
             body { background: white; margin: 0; padding: 0; }
             body * { visibility: hidden; }
             #report-preview, #report-preview * { visibility: visible; }
-            #report-preview { position: absolute; left: 0; top: 0; width: 100%; height: auto; overflow: visible; background: transparent; padding: 0; margin: 0; }
+            #report-preview { position: absolute; left: 0; top: 0; width: 100%; height: auto; overflow: visible; background: transparent; padding: 0; margin: 0; border:none;}
             .report-page { box-shadow: none; border: none; margin: 0; padding: 10mm; page-break-after: always; min-height: 297mm; }
-            .nav-buttons { display: none !important; }
+            .nav-buttons, h2 { display: none !important; }
         }
     </style>
 </head>
@@ -51,29 +56,22 @@
 
     <canvas id="renderCanvas" width="1000" height="1000" style="display: none;"></canvas>
 
-    <!-- Screen 1: Client Info & Astrology Details -->
     <div id="screen1" class="screen active">
-        <h2>1. Client Details</h2>
+        <h2>1. Client & Astrology Details</h2>
         <div class="input-group">
             <label>Client Name:</label>
             <input type="text" id="clientName" placeholder="Enter Full Name">
-            
-            <label>Date of Birth:</label>
+            <label>Date of Birth (For Lo-Shu Grid):</label>
             <input type="date" id="clientDob">
-            
             <label>Time of Birth:</label>
             <input type="time" id="clientTime">
-            
-            <label>Place of Birth / Property Location:</label>
+            <label>Property Location:</label>
             <input type="text" id="clientPlace" placeholder="Enter City/Location">
             <button class="geo-btn" onclick="autoDetectLocation()">📍 Auto Detect Location</button>
         </div>
-        <div class="nav-buttons">
-            <button onclick="nextScreen(2)">Next: Plot Setup ➡</button>
-        </div>
+        <div class="nav-buttons"><button onclick="nextScreen(2)">Next: Plot Setup ➡</button></div>
     </div>
 
-    <!-- Screen 2: Plot Setup -->
     <div id="screen2" class="screen">
         <h2>2. Plot & Map Setup</h2>
         <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 10px;">
@@ -94,7 +92,6 @@
         </div>
     </div>
 
-    <!-- Screen 3: 16 Zones -->
     <div id="screen3" class="screen">
         <h2>3. 16 Vastu Zones</h2>
         <div class="controls-card">
@@ -105,7 +102,6 @@
         <div class="nav-buttons"><button onclick="nextScreen(2)">⬅ Back</button><button onclick="nextScreen(4)">Next: 45 Devtas ➡</button></div>
     </div>
 
-    <!-- Screen 4: 45 Devtas -->
     <div id="screen4" class="screen">
         <h2>4. 45 Vastu Devtas</h2>
         <div class="controls-card">
@@ -116,7 +112,6 @@
         <div class="nav-buttons"><button onclick="nextScreen(3)">⬅ Back</button><button onclick="nextScreen(5)">Next: 8 Dishas ➡</button></div>
     </div>
 
-    <!-- Screen 5: 8 Dishas / Astro -->
     <div id="screen5" class="screen">
         <h2>5. 8 Dishas / Astro Chakra</h2>
         <div class="controls-card">
@@ -124,22 +119,38 @@
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider4" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas4" class="view-canvas"></canvas></div>
-        <div class="nav-buttons"><button onclick="nextScreen(4)">⬅ Back</button><button onclick="nextScreen(6)">Generate Report ➡</button></div>
+        <div class="nav-buttons"><button onclick="nextScreen(4)">⬅ Back</button><button onclick="nextScreen(6)">Next: Rec. Colors ➡</button></div>
     </div>
 
-    <!-- Screen 6: Final Report -->
     <div id="screen6" class="screen">
-        <h2>6. Final Vastu Evaluation Report</h2>
-        <p style="font-size: 14px; color:#aaa;">Click Print/Save PDF below.</p>
+        <h2>6. Recommended Colors</h2>
+        <div class="controls-card">
+            <label><span>🔍 Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(4, this.value)"></label>
+            <label><span>🔄 Rotate:</span> <input type="range" id="degSlider5" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
+        </div>
+        <div class="canvas-container"><canvas id="canvas5" class="view-canvas"></canvas></div>
+        <div class="nav-buttons"><button onclick="nextScreen(5)">⬅ Back</button><button onclick="nextScreen(7)">Next: Avoid Colors ➡</button></div>
+    </div>
 
+    <div id="screen7" class="screen">
+        <h2>7. Colors to Avoid</h2>
+        <div class="controls-card">
+            <label><span>🔍 Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(5, this.value)"></label>
+            <label><span>🔄 Rotate:</span> <input type="range" id="degSlider6" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
+        </div>
+        <div class="canvas-container"><canvas id="canvas6" class="view-canvas"></canvas></div>
+        <div class="nav-buttons"><button onclick="nextScreen(6)">⬅ Back</button><button onclick="nextScreen(8)">Final Report ➡</button></div>
+    </div>
+
+    <div id="screen8" class="screen">
+        <h2>8. Final Master Report</h2>
         <div class="nav-buttons" style="margin-bottom: 20px;">
             <button onclick="window.print()" style="background: #ff9800; font-size: 18px; padding: 15px 30px; width: 100%; max-width: 300px;">🖨️ Print / Save PDF</button>
             <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center; width: 100%;">
-                <button onclick="nextScreen(5)">⬅ Back</button>
+                <button onclick="nextScreen(7)">⬅ Back</button>
                 <button onclick="nextScreen(1)" style="background: #607d8b;">Start Over</button>
             </div>
         </div>
-
         <div id="report-preview"></div>
     </div>
 
@@ -150,68 +161,65 @@
     let mapImage = null; 
     let draggingPointIndex = -1;
     const CANVAS_RES = 1000; 
-    let chakraScales = [1, 1, 1, 1]; 
+    let chakraScales = [1, 1, 1, 1, 1, 1]; 
 
-    // CHAKRA IMAGES: User must upload these exact names to GitHub
-    const chakraImages = [null, new Image(), new Image(), new Image()];
-    chakraImages[1].src = "16_zones.png";
-    chakraImages[2].src = "45_devtas.png"; 
-    chakraImages[3].src = "8_dishas.png";
-
-    for(let i=1; i<=4; i++) {
+    for(let i=1; i<=6; i++) {
         let c = document.getElementById('canvas'+i);
         if(c) { c.width = CANVAS_RES; c.height = CANVAS_RES; }
     }
     const c1 = document.getElementById('canvas1');
 
-    // Auto Location Logic
     function autoDetectLocation() {
         const placeInput = document.getElementById('clientPlace');
         placeInput.value = "Detecting...";
         if(navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (position) => {
                 try {
-                    let lat = position.coords.latitude;
-                    let lon = position.coords.longitude;
-                    let res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                    let res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
                     let data = await res.json();
-                    let city = data.address.city || data.address.town || data.address.state || "Location Detected";
-                    placeInput.value = city;
-                } catch(e) {
-                    placeInput.value = position.coords.latitude.toFixed(2) + ", " + position.coords.longitude.toFixed(2);
-                }
+                    placeInput.value = data.address.city || data.address.town || data.address.state || "Location Detected";
+                } catch(e) { placeInput.value = "Lat: " + position.coords.latitude.toFixed(2); }
             }, () => { placeInput.value = "Permission Denied"; });
-        } else {
-            placeInput.value = "Geolocation not supported";
-        }
+        } else { placeInput.value = "Not supported"; }
     }
 
-    // Numerology Calculator
     function reduceNum(num) {
         if(num === 0) return 0;
         let sum = num % 9;
         return sum === 0 ? 9 : sum;
     }
-    function calculateNumerology() {
-        let dobStr = document.getElementById('clientDob').value;
-        if(!dobStr) return { mulank: 'N/A', bhagyank: 'N/A' };
+
+    function generateLoShu(dobStr) {
+        if(!dobStr) return { mulank: '-', bhagyank: '-', html: '<i>DOB Required for Grid</i>' };
         let parts = dobStr.split('-');
         let day = parseInt(parts[2]);
+        let mulank = reduceNum(day);
         let totalStr = parts.join('');
         let total = 0;
         for(let i=0; i<totalStr.length; i++) total += parseInt(totalStr[i]);
-        return { mulank: reduceNum(day), bhagyank: reduceNum(total) };
+        let bhagyank = reduceNum(total);
+        let gridDigits = totalStr + mulank.toString() + bhagyank.toString();
+        let counts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
+        for(let char of gridDigits) { if(counts[char] !== undefined) counts[char]++; }
+        const getCell = (n) => counts[n] > 0 ? n.toString().repeat(counts[n]) : '';
+        let tableHtml = `
+        <table class="loshu-table">
+            <tr><td>${getCell(4)}</td><td>${getCell(9)}</td><td>${getCell(2)}</td></tr>
+            <tr><td>${getCell(3)}</td><td>${getCell(5)}</td><td>${getCell(7)}</td></tr>
+            <tr><td>${getCell(8)}</td><td>${getCell(1)}</td><td>${getCell(6)}</td></tr>
+        </table>`;
+        return { mulank: mulank, bhagyank: bhagyank, html: tableHtml };
     }
 
     function setDegree(val) {
         if (val === "") val = 0;
         degree = parseInt(val);
         document.getElementById('plotDegree').value = degree;
-        for(let i=2; i<=4; i++) {
+        for(let i=2; i<=6; i++) {
             let slider = document.getElementById('degSlider'+i);
             if(slider && slider.value != degree) slider.value = degree;
         }
-        if(currentScreen >= 2 && currentScreen <= 5) renderCanvas('canvas'+(currentScreen-1), currentScreen - 2);
+        if(currentScreen >= 2 && currentScreen <= 7) renderCanvas('canvas'+(currentScreen-1), currentScreen - 2);
     }
 
     function loadMap(event) {
@@ -230,11 +238,8 @@
         document.getElementById('screen'+currentScreen).classList.remove('active');
         currentScreen = num;
         document.getElementById('screen'+currentScreen).classList.add('active');
-        if (num >= 2 && num <= 5) {
-            renderCanvas('canvas'+(num-1), num - 2);
-        } else if (num === 6) {
-            buildFinalReport(); 
-        }
+        if (num >= 2 && num <= 7) renderCanvas('canvas'+(num-1), num - 2);
+        else if (num === 8) buildFinalReport(); 
     }
 
     function updateScale(chakraIndex, val) {
@@ -242,14 +247,13 @@
         renderCanvas('canvas' + (chakraIndex + 1), chakraIndex);
     }
 
-    // Drawing Logic (Canvas 1)
-    function getPointerPos(e, targetCanvas) {
-        const rect = targetCanvas.getBoundingClientRect();
+    function getPointerPos(e, canvas) {
+        const rect = canvas.getBoundingClientRect();
         let clientX = e.touches ? e.touches[0].clientX : e.clientX;
         let clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return { x: (clientX - rect.left) * (targetCanvas.width / rect.width), y: (clientY - rect.top) * (targetCanvas.height / rect.height) };
+        return { x: (clientX - rect.left) * (canvas.width / rect.width), y: (clientY - rect.top) * (canvas.height / rect.height) };
     }
-
+    
     function handleStart(e) {
         if(currentScreen !== 2) return;
         e.preventDefault();
@@ -262,12 +266,9 @@
         if (draggingPointIndex === -1) { points.push(pos); draggingPointIndex = points.length - 1; }
         renderCanvas('canvas1', 0);
     }
-
     function handleMove(e) {
         if (currentScreen === 2 && draggingPointIndex !== -1) {
-            e.preventDefault();
-            points[draggingPointIndex] = getPointerPos(e, c1);
-            renderCanvas('canvas1', 0);
+            e.preventDefault(); points[draggingPointIndex] = getPointerPos(e, c1); renderCanvas('canvas1', 0);
         }
     }
     function handleEnd(e) { draggingPointIndex = -1; }
@@ -277,6 +278,93 @@
 
     function undoPoint() { points.pop(); renderCanvas('canvas1', 0); }
     function clearPoints() { points = []; renderCanvas('canvas1', 0); }
+
+    // 🔥 THE MAGIC GEOMETRY DRAWING FUNCTIONS 🔥
+    function draw16Zones(ctx, size) {
+        let radius = size / 2;
+        let zones = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+        let colors = ["#2196F3", "#03A9F4", "#00BCD4", "#4CAF50", "#8BC34A", "#CDDC39", "#FF9800", "#FF5722", "#F44336", "#FFEB3B", "#FFC107", "#9E9E9E", "#795548", "#607D8B", "#9C27B0", "#3F51B5"];
+        ctx.lineWidth = 2; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        for(let i = 0; i < 16; i++) {
+            let startAngle = (i * 22.5 - 11.25 - 90) * Math.PI / 180;
+            let endAngle = ((i + 1) * 22.5 - 11.25 - 90) * Math.PI / 180;
+            ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, radius, startAngle, endAngle); ctx.closePath();
+            ctx.fillStyle = colors[i] + "33"; ctx.fill(); ctx.strokeStyle = colors[i]; ctx.stroke();
+            let midAngle = (startAngle + endAngle) / 2;
+            let textX = Math.cos(midAngle) * (radius * 0.85); let textY = Math.sin(midAngle) * (radius * 0.85);
+            ctx.save(); ctx.translate(textX, textY); ctx.rotate(midAngle + Math.PI/2);
+            ctx.fillStyle = "#000"; ctx.font = "bold 16px Arial"; ctx.fillText(zones[i], 0, 0); ctx.restore();
+        }
+    }
+
+    function draw45Devtas(ctx, size) {
+        let step = size / 9;
+        let startX = -size / 2; let startY = -size / 2;
+        ctx.strokeStyle = "rgba(0,0,0,0.6)"; ctx.lineWidth = 2;
+        
+        // Vastu Purusha Mandala 9x9 Grid
+        for(let i=0; i<=9; i++) {
+            ctx.beginPath(); ctx.moveTo(startX + i*step, startY); ctx.lineTo(startX + i*step, startY + size); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(startX, startY + i*step); ctx.lineTo(startX + size, startY + i*step); ctx.stroke();
+        }
+        // Brahma Sthan
+        ctx.fillStyle = "rgba(255, 215, 0, 0.5)"; ctx.fillRect(startX + 3*step, startY + 3*step, 3*step, 3*step);
+        ctx.fillStyle = "#d32f2f"; ctx.font = "bold 20px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText("Brahma (45)", 0, 0);
+        
+        // Diagonals
+        ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(startX+size, startY+size); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(startX+size, startY); ctx.lineTo(startX, startY+size); ctx.stroke();
+
+        ctx.fillStyle = "#111"; ctx.font = "bold 14px Arial";
+        ctx.fillText("Aryama (E)", step*2, 0); ctx.fillText("Mitra (W)", -step*2, 0);
+        ctx.fillText("Vivaswan (S)", 0, step*2); ctx.fillText("Bhudhar (N)", 0, -step*2);
+        
+        ctx.font = "12px Arial"; ctx.fillStyle = "#00f";
+        ctx.fillText("Surya", size/2 - step/2, -step*1.5); ctx.fillText("Varun", -size/2 + step/2, 0);
+        ctx.fillText("Yama", 0, size/2 - step/2); ctx.fillText("Soma", 0, -size/2 + step/2);
+    }
+
+    function draw8Dishas(ctx, size) {
+        let radius = size / 2;
+        let zones = ["NORTH", "NE", "EAST", "SE", "SOUTH", "SW", "WEST", "NW"];
+        ctx.lineWidth = 2; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        for(let i = 0; i < 8; i++) {
+            let startAngle = (i * 45 - 22.5 - 90) * Math.PI / 180;
+            let endAngle = ((i + 1) * 45 - 22.5 - 90) * Math.PI / 180;
+            ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, radius, startAngle, endAngle); ctx.closePath();
+            ctx.fillStyle = (i%2===0) ? "rgba(33, 150, 243, 0.2)" : "rgba(255, 152, 0, 0.2)"; ctx.fill();
+            ctx.strokeStyle = "#4caf50"; ctx.stroke();
+            let midAngle = (startAngle + endAngle) / 2;
+            let textX = Math.cos(midAngle) * (radius * 0.7); let textY = Math.sin(midAngle) * (radius * 0.7);
+            ctx.save(); ctx.translate(textX, textY); ctx.rotate(midAngle + Math.PI/2);
+            ctx.fillStyle = "#d32f2f"; ctx.font = "bold 22px Arial"; ctx.fillText(zones[i], 0, 0); ctx.restore();
+        }
+    }
+
+    function drawColorTherapy(ctx, size, isRecommended) {
+        let radius = size / 2;
+        let zones = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+        // Elemental Colors Logic
+        let recColors = ["#2196F3", "#2196F3", "#2196F3", "#4CAF50", "#4CAF50", "#4CAF50", "#F44336", "#F44336", "#F44336", "#FFEB3B", "#FFEB3B", "#9E9E9E", "#9E9E9E", "#9E9E9E", "#9E9E9E", "#2196F3"];
+        let avoidColors = ["#F44336", "#F44336", "#F44336", "#9E9E9E", "#9E9E9E", "#9E9E9E", "#2196F3", "#2196F3", "#2196F3", "#4CAF50", "#4CAF50", "#F44336", "#F44336", "#F44336", "#F44336", "#F44336"];
+        let colors = isRecommended ? recColors : avoidColors;
+
+        ctx.lineWidth = 1; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        for(let i = 0; i < 16; i++) {
+            let startAngle = (i * 22.5 - 11.25 - 90) * Math.PI / 180;
+            let endAngle = ((i + 1) * 22.5 - 11.25 - 90) * Math.PI / 180;
+            ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, radius, startAngle, endAngle); ctx.closePath();
+            ctx.fillStyle = colors[i] + "88"; // 53% opacity for rich color
+            ctx.fill(); ctx.strokeStyle = "#333"; ctx.stroke();
+            
+            let midAngle = (startAngle + endAngle) / 2;
+            let textX = Math.cos(midAngle) * (radius * 0.85); let textY = Math.sin(midAngle) * (radius * 0.85);
+            ctx.save(); ctx.translate(textX, textY); ctx.rotate(midAngle + Math.PI/2);
+            ctx.fillStyle = "#fff"; ctx.font = "bold 14px Arial"; 
+            ctx.shadowColor="black"; ctx.shadowBlur=3; ctx.fillText(zones[i], 0, 0); ctx.restore();
+        }
+    }
 
     function renderCanvas(canvasId, chakraIndex) {
         const cvs = document.getElementById(canvasId);
@@ -294,20 +382,24 @@
         }
 
         if(chakraIndex > 0 && points.length >= 3) {
-            let img = chakraImages[chakraIndex];
-            if(img && img.complete) {
-                let maxDist = 0;
-                points.forEach(p => { let d = Math.sqrt(Math.pow(p.x - cx, 2) + Math.pow(p.y - cy, 2)); if(d > maxDist) maxDist = d; });
-                let cSize = maxDist * 2.5; 
-                if(cSize < 200) cSize = 200; 
-                cSize *= (chakraScales[chakraIndex] || 1);
+            let maxDist = 0;
+            points.forEach(p => { let d = Math.sqrt(Math.pow(p.x - cx, 2) + Math.pow(p.y - cy, 2)); if(d > maxDist) maxDist = d; });
+            let cSize = maxDist * 2.5; 
+            if(cSize < 200) cSize = 200; 
+            cSize *= (chakraScales[chakraIndex] || 1);
 
-                ctx.save();
-                ctx.translate(cx, cy); 
-                ctx.rotate(degree * Math.PI / 180); 
-                ctx.drawImage(img, -cSize/2, -cSize/2, cSize, cSize); 
-                ctx.restore();
-            }
+            // 🔥 GEOMETRY MAGIC APPLIED HERE 🔥
+            ctx.save();
+            ctx.translate(cx, cy); 
+            ctx.rotate(degree * Math.PI / 180); 
+            
+            if (chakraIndex === 1) draw16Zones(ctx, cSize);
+            else if (chakraIndex === 2) draw45Devtas(ctx, cSize);
+            else if (chakraIndex === 3) draw8Dishas(ctx, cSize);
+            else if (chakraIndex === 4) drawColorTherapy(ctx, cSize, true);
+            else if (chakraIndex === 5) drawColorTherapy(ctx, cSize, false);
+            
+            ctx.restore();
         }
 
         if(points.length > 0) {
@@ -320,10 +412,8 @@
                 ctx.fillStyle = '#ff5722'; ctx.beginPath(); ctx.arc(p.x, p.y, 12, 0, Math.PI*2); ctx.fill(); 
                 ctx.fillStyle = '#000'; ctx.font = "bold 24px Arial"; ctx.fillText("P"+(i+1), p.x + 15, p.y - 15);
             });
-
             if (points.length >= 3) {
                 ctx.fillStyle = '#00bcd4'; ctx.beginPath(); ctx.arc(cx, cy, 15, 0, Math.PI*2); ctx.fill();
-                ctx.font = "bold 28px Arial"; ctx.fillText('Brahma Sthan', cx+20, cy);
             }
         }
     }
@@ -333,19 +423,18 @@
         previewArea.innerHTML = '';
         
         let cName = document.getElementById('clientName').value || "Client Name";
-        let cDob = document.getElementById('clientDob').value || "N/A";
+        let cDob = document.getElementById('clientDob').value;
         let cTime = document.getElementById('clientTime').value || "N/A";
         let cPlace = document.getElementById('clientPlace').value || "N/A";
-        let numero = calculateNumerology();
-        let d = new Date();
-        let dateStr = d.toLocaleDateString();
+        
+        let numero = generateLoShu(cDob);
+        let dateStr = new Date().toLocaleDateString();
 
         const renderCvs = document.getElementById('renderCanvas');
         const rCtx = renderCvs.getContext('2d');
-        const titles = ["16 Vastu Zones", "45 Vastu Devtas", "8 Dishas / Astro Chakra"];
+        const titles = ["Distribution of 16 Vastu Zones", "Distribution of 45 Energy Fields / Devta", "8 Direction Astro-Vastu Chakra", "Recommended Colors", "Colors To Avoid"];
 
-        for(let i=1; i<=3; i++) {
-            // Re-render source cleanly
+        for(let i=1; i<=5; i++) {
             let sourceCanvas = document.getElementById('canvas'+(i+1));
             rCtx.fillStyle = '#ffffff'; rCtx.fillRect(0, 0, 1000, 1000);
             rCtx.drawImage(sourceCanvas, 0, 0, 1000, 1000);
@@ -361,14 +450,17 @@
                 ${i === 1 ? `
                 <div class="client-info">
                     <strong>CLIENT NAME:</strong> ${cName} <br>
-                    <strong>DOB:</strong> ${cDob} &nbsp;|&nbsp; <strong>TIME:</strong> ${cTime} <br>
+                    <strong>DOB:</strong> ${cDob || 'N/A'} &nbsp;|&nbsp; <strong>TIME:</strong> ${cTime} <br>
                     <strong>LOCATION:</strong> ${cPlace} <br>
                     <strong>PLOT DEGREE:</strong> ${degree}° &nbsp;|&nbsp; <strong>DATE:</strong> ${dateStr}
                 </div>
-                <div class="numerology-box">
-                    🔮 Numerology Insights:<br>
-                    Psychic Number (Mulank): <span style="color:#d32f2f; font-size:18px;">${numero.mulank}</span> &nbsp; | &nbsp;
-                    Destiny Number (Bhagyank): <span style="color:#d32f2f; font-size:18px;">${numero.bhagyank}</span>
+                <div class="numerology-container">
+                    <div class="num-details">
+                        <p style="margin:0 0 5px 0; font-size:18px;">🔮 <b>NUMEROLOGY (Lo-Shu)</b></p>
+                        Psychic No. (Mulank): <b style="color:#d32f2f; font-size:18px;">${numero.mulank}</b><br>
+                        Destiny No. (Bhagyank): <b style="color:#d32f2f; font-size:18px;">${numero.bhagyank}</b>
+                    </div>
+                    <div>${numero.html}</div>
                 </div>
                 ` : ''}
 
