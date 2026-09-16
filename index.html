@@ -43,6 +43,15 @@
         .page-title { color: #d32f2f; font-size: 22px; margin: 15px 0; font-weight: bold;}
         .instruction-box { background: #ffeb3b; color: #000; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 15px; font-weight: bold; }
 
+        /* Extra Pages Styles */
+        .info-table { width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left; font-size: 14px; }
+        .info-table th, .info-table td { padding: 12px; border: 1px solid #aaa; }
+        .info-table th { background: #d32f2f; color: white; }
+        
+        .grid-cards { display: flex; flex-wrap: wrap; justify-content: space-between; margin-top: 20px; text-align: left; }
+        .card { width: 48%; border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-sizing: border-box; background: #fdfdfd; }
+        .card h3 { color: #4caf50; margin-top: 0; font-size: 18px; border-bottom: 2px solid #4caf50; padding-bottom: 5px; }
+
         @media print {
             body { background: white; margin: 0; padding: 0; }
             body * { visibility: hidden; }
@@ -96,6 +105,7 @@
         </div>
     </div>
 
+    <!-- Screen 3 to 11: All 9 Chakras -->
     <div id="screen3" class="screen">
         <h2>3. 16 Vastu Zones</h2>
         <div class="controls-card">
@@ -103,7 +113,7 @@
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider2" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas2" class="view-canvas"></canvas></div>
-        <div class="nav-buttons"><button onclick="nextScreen(2)">⬅ Back</button><button onclick="nextScreen(4)">Next: 45 Devtas ➡</button></div>
+        <div class="nav-buttons"><button onclick="nextScreen(2)">⬅ Back</button><button onclick="nextScreen(4)">Next ➡</button></div>
     </div>
 
     <div id="screen4" class="screen">
@@ -113,7 +123,7 @@
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider3" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas3" class="view-canvas"></canvas></div>
-        <div class="nav-buttons"><button onclick="nextScreen(3)">⬅ Back</button><button onclick="nextScreen(5)">Next: 8 Dishas ➡</button></div>
+        <div class="nav-buttons"><button onclick="nextScreen(3)">⬅ Back</button><button onclick="nextScreen(5)">Next ➡</button></div>
     </div>
 
     <div id="screen5" class="screen">
@@ -123,7 +133,7 @@
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider4" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas4" class="view-canvas"></canvas></div>
-        <div class="nav-buttons"><button onclick="nextScreen(4)">⬅ Back</button><button onclick="nextScreen(6)">Next: Rec. Colors ➡</button></div>
+        <div class="nav-buttons"><button onclick="nextScreen(4)">⬅ Back</button><button onclick="nextScreen(6)">Next ➡</button></div>
     </div>
 
     <div id="screen6" class="screen">
@@ -133,7 +143,7 @@
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider5" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas5" class="view-canvas"></canvas></div>
-        <div class="nav-buttons"><button onclick="nextScreen(5)">⬅ Back</button><button onclick="nextScreen(7)">Next: Avoid Colors ➡</button></div>
+        <div class="nav-buttons"><button onclick="nextScreen(5)">⬅ Back</button><button onclick="nextScreen(7)">Next ➡</button></div>
     </div>
 
     <div id="screen7" class="screen">
@@ -143,15 +153,57 @@
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider6" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas6" class="view-canvas"></canvas></div>
-        <div class="nav-buttons"><button onclick="nextScreen(6)">⬅ Back</button><button onclick="nextScreen(8)">Final Report ➡</button></div>
+        <div class="nav-buttons"><button onclick="nextScreen(6)">⬅ Back</button><button onclick="nextScreen(8)">Next ➡</button></div>
     </div>
 
+    <!-- 🔥 4 NAYE VASTU CHAKRA SCREENS 🔥 -->
     <div id="screen8" class="screen">
-        <h2>8. Final Master Report</h2>
+        <h2>8. 32 Entrances Chakra</h2>
+        <div class="controls-card">
+            <label><span>🔍 Grid Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(6, this.value)"></label>
+            <label><span>🔄 Rotate:</span> <input type="range" id="degSlider7" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
+        </div>
+        <div class="canvas-container"><canvas id="canvas7" class="view-canvas"></canvas></div>
+        <div class="nav-buttons"><button onclick="nextScreen(7)">⬅ Back</button><button onclick="nextScreen(9)">Next ➡</button></div>
+    </div>
+
+    <div id="screen9" class="screen">
+        <h2>9. Dasha-Disha Therapy</h2>
+        <div class="controls-card">
+            <label><span>🔍 Grid Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(7, this.value)"></label>
+            <label><span>🔄 Rotate:</span> <input type="range" id="degSlider8" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
+        </div>
+        <div class="canvas-container"><canvas id="canvas8" class="view-canvas"></canvas></div>
+        <div class="nav-buttons"><button onclick="nextScreen(8)">⬅ Back</button><button onclick="nextScreen(10)">Next ➡</button></div>
+    </div>
+
+    <div id="screen10" class="screen">
+        <h2>10. Dasha-Disha Activation</h2>
+        <div class="controls-card">
+            <label><span>🔍 Grid Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(8, this.value)"></label>
+            <label><span>🔄 Rotate:</span> <input type="range" id="degSlider9" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
+        </div>
+        <div class="canvas-container"><canvas id="canvas9" class="view-canvas"></canvas></div>
+        <div class="nav-buttons"><button onclick="nextScreen(9)">⬅ Back</button><button onclick="nextScreen(11)">Next ➡</button></div>
+    </div>
+
+    <div id="screen11" class="screen">
+        <h2>11. Directional Energy Activation</h2>
+        <div class="controls-card">
+            <label><span>🔍 Grid Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(9, this.value)"></label>
+            <label><span>🔄 Rotate:</span> <input type="range" id="degSlider10" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
+        </div>
+        <div class="canvas-container"><canvas id="canvas10" class="view-canvas"></canvas></div>
+        <div class="nav-buttons"><button onclick="nextScreen(10)">⬅ Back</button><button onclick="nextScreen(12)">Generate Full Report ➡</button></div>
+    </div>
+
+    <!-- Screen 12: Final Report -->
+    <div id="screen12" class="screen">
+        <h2>12. Final 13-Page Master Report</h2>
         <div class="nav-buttons" style="margin-bottom: 20px;">
             <button onclick="window.print()" style="background: #ff9800; font-size: 18px; padding: 15px 30px; width: 100%; max-width: 300px;">🖨️ Print / Save PDF</button>
             <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center; width: 100%;">
-                <button onclick="nextScreen(7)">⬅ Back</button>
+                <button onclick="nextScreen(11)">⬅ Back</button>
                 <button onclick="nextScreen(1)" style="background: #607d8b;">Start Over</button>
             </div>
         </div>
@@ -165,13 +217,32 @@
     let mapImage = null; 
     let draggingPointIndex = -1;
     const CANVAS_RES = 1000; 
-    let chakraScales = [1, 1, 1, 1, 1, 1]; 
+    
+    // Scale tracking for 9 chakras
+    let chakraScales = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; 
 
-    for(let i=1; i<=6; i++) {
+    for(let i=1; i<=10; i++) {
         let c = document.getElementById('canvas'+i);
         if(c) { c.width = CANVAS_RES; c.height = CANVAS_RES; }
     }
     const c1 = document.getElementById('canvas1');
+
+    // 🔥 ALL 9 IMAGES THAT YOU WILL UPLOAD TO GITHUB 🔥
+    const chakraImages = [null, 
+        new Image(), new Image(), new Image(), new Image(), new Image(),
+        new Image(), new Image(), new Image(), new Image()
+    ];
+    chakraImages[1].src = "16_zones.png";
+    chakraImages[2].src = "45_devtas.png"; 
+    chakraImages[3].src = "8_dishas.png";
+    chakraImages[4].src = "color_rec.png"; 
+    chakraImages[5].src = "color_avoid.png"; 
+    
+    // Nayi 4 PNG files ke naam:
+    chakraImages[6].src = "32_entrances.png"; 
+    chakraImages[7].src = "dd_therapy.png"; 
+    chakraImages[8].src = "dd_activation.png"; 
+    chakraImages[9].src = "energy_activation.png"; 
 
     function autoDetectLocation() {
         const placeInput = document.getElementById('clientPlace');
@@ -219,11 +290,11 @@
         if (val === "") val = 0;
         degree = parseInt(val);
         document.getElementById('plotDegree').value = degree;
-        for(let i=2; i<=6; i++) {
+        for(let i=2; i<=10; i++) {
             let slider = document.getElementById('degSlider'+i);
             if(slider && slider.value != degree) slider.value = degree;
         }
-        if(currentScreen >= 2 && currentScreen <= 7) renderCanvas('canvas'+(currentScreen-1), currentScreen - 2);
+        if(currentScreen >= 2 && currentScreen <= 11) renderCanvas('canvas'+(currentScreen-1), currentScreen - 2);
     }
 
     function loadMap(event) {
@@ -242,8 +313,8 @@
         document.getElementById('screen'+currentScreen).classList.remove('active');
         currentScreen = num;
         document.getElementById('screen'+currentScreen).classList.add('active');
-        if (num >= 2 && num <= 7) renderCanvas('canvas'+(num-1), num - 2);
-        else if (num === 8) buildFinalReport(); 
+        if (num >= 2 && num <= 11) renderCanvas('canvas'+(num-1), num - 2);
+        else if (num === 12) buildFinalReport(); 
     }
 
     function updateScale(chakraIndex, val) {
@@ -283,86 +354,6 @@
     function undoPoint() { points.pop(); renderCanvas('canvas1', 0); }
     function clearPoints() { points = []; renderCanvas('canvas1', 0); }
 
-    // 🔥 GEOMETRY DRAWING FUNCTIONS 🔥
-    function draw16Zones(ctx, size) {
-        let radius = size / 2;
-        let zones = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-        let colors = ["#2196F3", "#03A9F4", "#00BCD4", "#4CAF50", "#8BC34A", "#CDDC39", "#FF9800", "#FF5722", "#F44336", "#FFEB3B", "#FFC107", "#9E9E9E", "#795548", "#607D8B", "#9C27B0", "#3F51B5"];
-        ctx.lineWidth = 2; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        for(let i = 0; i < 16; i++) {
-            let startAngle = (i * 22.5 - 11.25 - 90) * Math.PI / 180;
-            let endAngle = ((i + 1) * 22.5 - 11.25 - 90) * Math.PI / 180;
-            ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, radius, startAngle, endAngle); ctx.closePath();
-            ctx.fillStyle = colors[i] + "33"; ctx.fill(); ctx.strokeStyle = colors[i]; ctx.stroke();
-            let midAngle = (startAngle + endAngle) / 2;
-            let textX = Math.cos(midAngle) * (radius * 0.85); let textY = Math.sin(midAngle) * (radius * 0.85);
-            ctx.save(); ctx.translate(textX, textY); ctx.rotate(midAngle + Math.PI/2);
-            ctx.fillStyle = "#000"; ctx.font = "bold 16px Arial"; ctx.fillText(zones[i], 0, 0); ctx.restore();
-        }
-    }
-
-    function draw45Devtas(ctx, size) {
-        let step = size / 9;
-        let startX = -size / 2; let startY = -size / 2;
-        ctx.strokeStyle = "rgba(0,0,0,0.8)"; ctx.lineWidth = 2;
-        
-        for(let i=0; i<=9; i++) {
-            ctx.beginPath(); ctx.moveTo(startX + i*step, startY); ctx.lineTo(startX + i*step, startY + size); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(startX, startY + i*step); ctx.lineTo(startX + size, startY + i*step); ctx.stroke();
-        }
-        
-        ctx.fillStyle = "rgba(255, 215, 0, 0.4)"; ctx.fillRect(startX + 3*step, startY + 3*step, 3*step, 3*step);
-        ctx.fillStyle = "#d32f2f"; ctx.font = "bold 20px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        ctx.fillText("Brahma (45)", 0, 0);
-        
-        ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(startX+size, startY+size); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(startX+size, startY); ctx.lineTo(startX, startY+size); ctx.stroke();
-
-        ctx.fillStyle = "#111"; ctx.font = "bold 14px Arial";
-        ctx.fillText("Aryama", step*2.5, 0); ctx.fillText("Mitra", -step*2.5, 0);
-        ctx.fillText("Vivaswan", 0, step*2.5); ctx.fillText("Bhudhar", 0, -step*2.5);
-    }
-
-    function draw8Dishas(ctx, size) {
-        let radius = size / 2;
-        let zones = ["NORTH", "NE", "EAST", "SE", "SOUTH", "SW", "WEST", "NW"];
-        ctx.lineWidth = 2; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        for(let i = 0; i < 8; i++) {
-            let startAngle = (i * 45 - 22.5 - 90) * Math.PI / 180;
-            let endAngle = ((i + 1) * 45 - 22.5 - 90) * Math.PI / 180;
-            ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, radius, startAngle, endAngle); ctx.closePath();
-            ctx.fillStyle = (i%2===0) ? "rgba(33, 150, 243, 0.2)" : "rgba(255, 152, 0, 0.2)"; ctx.fill();
-            ctx.strokeStyle = "#4caf50"; ctx.stroke();
-            let midAngle = (startAngle + endAngle) / 2;
-            let textX = Math.cos(midAngle) * (radius * 0.7); let textY = Math.sin(midAngle) * (radius * 0.7);
-            ctx.save(); ctx.translate(textX, textY); ctx.rotate(midAngle + Math.PI/2);
-            ctx.fillStyle = "#d32f2f"; ctx.font = "bold 22px Arial"; ctx.fillText(zones[i], 0, 0); ctx.restore();
-        }
-    }
-
-    function drawColorTherapy(ctx, size, isRecommended) {
-        let radius = size / 2;
-        let zones = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-        let recColors = ["#2196F3", "#2196F3", "#2196F3", "#4CAF50", "#4CAF50", "#4CAF50", "#F44336", "#F44336", "#F44336", "#FFEB3B", "#FFEB3B", "#9E9E9E", "#9E9E9E", "#9E9E9E", "#9E9E9E", "#2196F3"];
-        let avoidColors = ["#F44336", "#F44336", "#F44336", "#9E9E9E", "#9E9E9E", "#9E9E9E", "#2196F3", "#2196F3", "#2196F3", "#4CAF50", "#4CAF50", "#F44336", "#F44336", "#F44336", "#F44336", "#F44336"];
-        let colors = isRecommended ? recColors : avoidColors;
-
-        ctx.lineWidth = 1; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        for(let i = 0; i < 16; i++) {
-            let startAngle = (i * 22.5 - 11.25 - 90) * Math.PI / 180;
-            let endAngle = ((i + 1) * 22.5 - 11.25 - 90) * Math.PI / 180;
-            ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, radius, startAngle, endAngle); ctx.closePath();
-            ctx.fillStyle = colors[i] + "99"; // High Opacity
-            ctx.fill(); ctx.strokeStyle = "#333"; ctx.stroke();
-            
-            let midAngle = (startAngle + endAngle) / 2;
-            let textX = Math.cos(midAngle) * (radius * 0.85); let textY = Math.sin(midAngle) * (radius * 0.85);
-            ctx.save(); ctx.translate(textX, textY); ctx.rotate(midAngle + Math.PI/2);
-            ctx.fillStyle = "#fff"; ctx.font = "bold 14px Arial"; 
-            ctx.shadowColor="black"; ctx.shadowBlur=4; ctx.fillText(zones[i], 0, 0); ctx.restore();
-        }
-    }
-
     function renderCanvas(canvasId, chakraIndex) {
         const cvs = document.getElementById(canvasId);
         if(!cvs) return;
@@ -370,7 +361,6 @@
         ctx.clearRect(0, 0, CANVAS_RES, CANVAS_RES);
         ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, CANVAS_RES, CANVAS_RES); 
         
-        // 1. Draw Map First
         if (mapImage) { ctx.globalAlpha = 0.5; ctx.drawImage(mapImage, 0, 0, CANVAS_RES, CANVAS_RES); ctx.globalAlpha = 1.0; }
 
         let cx = 0, cy = 0;
@@ -379,41 +369,33 @@
             cx /= points.length; cy /= points.length;
         }
 
-        // 🔥 THE MAGIC: CANVAS CLIPPING (Chakra Sirf Plot ke Andar dikhega) 🔥
+        // 🔥 CLIP & DRAW PNG LOGIC 🔥
         if(chakraIndex > 0 && points.length >= 3) {
-            let maxDist = 0;
-            points.forEach(p => { let d = Math.sqrt(Math.pow(p.x - cx, 2) + Math.pow(p.y - cy, 2)); if(d > maxDist) maxDist = d; });
-            
-            // Base size covers the entire polygon properly
-            let cSize = maxDist * 2.5; 
-            if(cSize < 200) cSize = 200; 
-            cSize *= (chakraScales[chakraIndex] || 1);
+            let img = chakraImages[chakraIndex];
+            if(img && img.complete) {
+                let maxDist = 0;
+                points.forEach(p => { let d = Math.sqrt(Math.pow(p.x - cx, 2) + Math.pow(p.y - cy, 2)); if(d > maxDist) maxDist = d; });
+                
+                let cSize = maxDist * 2.5; 
+                if(cSize < 200) cSize = 200; 
+                cSize *= (chakraScales[chakraIndex] || 1);
 
-            ctx.save();
-            
-            // 2. Create the clipping mask using User's Dots
-            ctx.beginPath();
-            ctx.moveTo(points[0].x, points[0].y);
-            for(let i=1; i<points.length; i++) {
-                ctx.lineTo(points[i].x, points[i].y);
+                ctx.save();
+                
+                // Canvas Clipping!
+                ctx.beginPath();
+                ctx.moveTo(points[0].x, points[0].y);
+                for(let i=1; i<points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+                ctx.closePath();
+                ctx.clip(); 
+
+                ctx.translate(cx, cy); 
+                ctx.rotate(degree * Math.PI / 180); 
+                ctx.drawImage(img, -cSize/2, -cSize/2, cSize, cSize); 
+                ctx.restore();
             }
-            ctx.closePath();
-            ctx.clip(); // <--- CHAKRA AB BAHAR NAHI JAYEGA!
-
-            // 3. Draw the Chakra inside the clip
-            ctx.translate(cx, cy); 
-            ctx.rotate(degree * Math.PI / 180); 
-            
-            if (chakraIndex === 1) draw16Zones(ctx, cSize);
-            else if (chakraIndex === 2) draw45Devtas(ctx, cSize);
-            else if (chakraIndex === 3) draw8Dishas(ctx, cSize);
-            else if (chakraIndex === 4) drawColorTherapy(ctx, cSize, true);
-            else if (chakraIndex === 5) drawColorTherapy(ctx, cSize, false);
-            
-            ctx.restore();
         }
 
-        // 4. Draw Plot Lines & Dots on top (so they are visible)
         if(points.length > 0) {
             ctx.strokeStyle = '#4caf50'; ctx.lineWidth = 6; ctx.beginPath();
             ctx.moveTo(points[0].x, points[0].y);
@@ -426,6 +408,7 @@
             });
             if (points.length >= 3) {
                 ctx.fillStyle = '#00bcd4'; ctx.beginPath(); ctx.arc(cx, cy, 15, 0, Math.PI*2); ctx.fill();
+                ctx.font = "bold 28px Arial"; ctx.fillText('Brahma Sthan', cx+20, cy);
             }
         }
     }
@@ -444,9 +427,21 @@
 
         const renderCvs = document.getElementById('renderCanvas');
         const rCtx = renderCvs.getContext('2d');
-        const titles = ["Distribution of 16 Vastu Zones", "Distribution of 45 Energy Fields / Devta", "8 Direction Astro-Vastu Chakra", "Recommended Colors", "Colors To Avoid"];
+        
+        const titles = [
+            "Distribution of 16 Vastu Zones", 
+            "Distribution of 45 Energy Fields / Devta", 
+            "8 Direction Astro-Vastu Chakra", 
+            "Recommended Colors", 
+            "Colors To Avoid",
+            "Distribution of 32 Entrances",
+            "Dasha-Disha Therapy",
+            "Dasha-Disha Activation",
+            "Directional Energy Activation"
+        ];
 
-        for(let i=1; i<=5; i++) {
+        // 9 PAGES FOR THE 9 MAPS
+        for(let i=1; i<=9; i++) {
             let sourceCanvas = document.getElementById('canvas'+(i+1));
             rCtx.fillStyle = '#ffffff'; rCtx.fillRect(0, 0, 1000, 1000);
             rCtx.drawImage(sourceCanvas, 0, 0, 1000, 1000);
@@ -480,9 +475,67 @@
                 <img src="${imgData}" class="map-img" />
                 <p style="margin-top: 20px; font-size: 12px; color: #888;">Report Generated Automatically by VastuExpert App</p>
             </div>`;
-            
             previewArea.innerHTML += pageHtml;
         }
+
+        // 🔥 THE 4 EXTRA THEORY PAGES 🔥
+        
+        // Extra Page 1: 16 Zones Info
+        previewArea.innerHTML += `
+        <div class="report-page">
+            <div class="report-header"><h1>ADVANCED VASTU EVALUATION REPORT</h1></div>
+            <h2 class="page-title">Vastu Evaluation For 16 Zones</h2>
+            <table class="info-table">
+                <tr><th>Zone</th><th>Attribute</th><th>Ideal For</th></tr>
+                <tr><td>N</td><td>Money & Opportunities</td><td>Living, Safe, Entrance</td></tr>
+                <tr><td>NE</td><td>Clarity & Mind</td><td>Puja Room, Meditation</td></tr>
+                <tr><td>E</td><td>Social Connections</td><td>Living Room, Entrance</td></tr>
+                <tr><td>SE</td><td>Cash & Fire</td><td>Kitchen, Heater, Geyser</td></tr>
+                <tr><td>S</td><td>Fame & Relaxation</td><td>Bedroom, Wardrobe</td></tr>
+                <tr><td>SW</td><td>Relationships & Skills</td><td>Master Bedroom, Safe</td></tr>
+                <tr><td>W</td><td>Gains & Profits</td><td>Dining, Bedroom</td></tr>
+                <tr><td>NW</td><td>Support & Banking</td><td>Guest Room, Parking</td></tr>
+            </table>
+        </div>`;
+
+        // Extra Page 2: Interior Positions
+        previewArea.innerHTML += `
+        <div class="report-page">
+            <div class="report-header"><h1>ADVANCED VASTU EVALUATION REPORT</h1></div>
+            <h2 class="page-title">Basic Interior Position</h2>
+            <div class="grid-cards">
+                <div class="card"><h3>🛏️ Bed & Sleeping</h3><p>Master bedroom should be in South or West zones. Sleep with head towards South or East.</p></div>
+                <div class="card"><h3>🔥 Kitchen Layout</h3><p>Hob/Stove must be in SE or SSE. Sink should be in North or East.</p></div>
+                <div class="card"><h3>🚪 Wardrobe & Safe</h3><p>Place heavy wardrobes on South or West walls. Safe should open towards North.</p></div>
+                <div class="card"><h3>🛋️ Sofa & Living</h3><p>Place heavy furniture in South/West of the living room. Face East or North while sitting.</p></div>
+            </div>
+        </div>`;
+
+        // Extra Page 3: Auspicious Indoor Plants
+        previewArea.innerHTML += `
+        <div class="report-page">
+            <div class="report-header"><h1>ADVANCED VASTU EVALUATION REPORT</h1></div>
+            <h2 class="page-title">Auspicious Indoor Plants</h2>
+            <div class="grid-cards">
+                <div class="card"><h3>🎋 Lucky Bamboo</h3><p>Place in East or South-East for wealth and positive energy.</p></div>
+                <div class="card"><h3>🌿 Money Plant</h3><p>Best suited for North or East direction. Brings financial stability.</p></div>
+                <div class="card"><h3>🌸 Peace Lily</h3><p>Promotes harmony. Keep in West or North-West areas.</p></div>
+                <div class="card"><h3>🌼 Jasmine</h3><p>Reduces anxiety. Ideal for East or North windows.</p></div>
+            </div>
+        </div>`;
+
+        // Extra Page 4: Modern Gadgets
+        previewArea.innerHTML += `
+        <div class="report-page">
+            <div class="report-header"><h1>ADVANCED VASTU EVALUATION REPORT</h1></div>
+            <h2 class="page-title">Modern Gadgets Position</h2>
+            <div class="grid-cards">
+                <div class="card"><h3>📺 TV / Entertainment</h3><p>Place in East or North-West. Avoid keeping TV in bedroom.</p></div>
+                <div class="card"><h3>📶 WiFi Router</h3><p>North-West or East zones ensure smooth connections.</p></div>
+                <div class="card"><h3>💻 Laptop / Study</h3><p>Face East or North while working. Keep desk clutter-free.</p></div>
+                <div class="card"><h3>🕰️ Wall Clock</h3><p>Place on North or East walls to ensure steady progress in life.</p></div>
+            </div>
+        </div>`;
     }
 </script>
 </body>
