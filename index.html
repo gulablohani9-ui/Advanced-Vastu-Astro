@@ -13,7 +13,7 @@
         .input-group label { display: block; font-size: 14px; margin-bottom: 5px; color: #4caf50; font-weight: bold; }
         .input-group input { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #555; background: #222; color: #fff; box-sizing: border-box; font-size: 16px; margin-bottom: 10px; }
         
-        .canvas-container { width: 98vw; height: 98vw; max-width: 800px; max-height: 800px; margin: 10px auto; position: relative; border: 2px solid #4caf50; background: #1a1a1a; border-radius: 8px; }
+        .canvas-container { width: 98vw; height: 98vw; max-width: 800px; max-height: 800px; margin: 10px auto; position: relative; border: 2px solid #4caf50; background: #1a1a1a; border-radius: 8px; overflow: hidden; }
         canvas.view-canvas { width: 100%; height: 100%; display: block; touch-action: none; background: transparent; }
         
         button { padding: 12px; margin: 5px; font-size: 16px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; background: #4caf50; color: white; }
@@ -41,6 +41,7 @@
 
         .map-img { width: 100%; max-width: 600px; border: 2px solid #333; margin-top: 10px; }
         .page-title { color: #d32f2f; font-size: 22px; margin: 15px 0; font-weight: bold;}
+        .instruction-box { background: #ffeb3b; color: #000; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 15px; font-weight: bold; }
 
         @media print {
             body { background: white; margin: 0; padding: 0; }
@@ -48,7 +49,7 @@
             #report-preview, #report-preview * { visibility: visible; }
             #report-preview { position: absolute; left: 0; top: 0; width: 100%; height: auto; overflow: visible; background: transparent; padding: 0; margin: 0; border:none;}
             .report-page { box-shadow: none; border: none; margin: 0; padding: 10mm; page-break-after: always; min-height: 297mm; }
-            .nav-buttons, h2 { display: none !important; }
+            .nav-buttons, h2, .instruction-box { display: none !important; }
         }
     </style>
 </head>
@@ -56,6 +57,7 @@
 
     <canvas id="renderCanvas" width="1000" height="1000" style="display: none;"></canvas>
 
+    <!-- Screen 1: Client Info -->
     <div id="screen1" class="screen active">
         <h2>1. Client & Astrology Details</h2>
         <div class="input-group">
@@ -72,8 +74,10 @@
         <div class="nav-buttons"><button onclick="nextScreen(2)">Next: Plot Setup ➡</button></div>
     </div>
 
+    <!-- Screen 2: Plot Setup -->
     <div id="screen2" class="screen">
         <h2>2. Plot & Map Setup</h2>
+        <div class="instruction-box">💡 TIP: Draw your plot by placing dots. The Chakras will ONLY show inside this drawn plot!</div>
         <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 10px;">
             <input type="file" id="mapUpload" accept="image/*" style="display:none;" onchange="loadMap(event)">
             <button class="file-upload-btn" onclick="document.getElementById('mapUpload').click()">🖼️ Upload Map</button>
@@ -95,7 +99,7 @@
     <div id="screen3" class="screen">
         <h2>3. 16 Vastu Zones</h2>
         <div class="controls-card">
-            <label><span>🔍 Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(1, this.value)"></label>
+            <label><span>🔍 Grid Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(1, this.value)"></label>
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider2" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas2" class="view-canvas"></canvas></div>
@@ -105,7 +109,7 @@
     <div id="screen4" class="screen">
         <h2>4. 45 Vastu Devtas</h2>
         <div class="controls-card">
-            <label><span>🔍 Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(2, this.value)"></label>
+            <label><span>🔍 Grid Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(2, this.value)"></label>
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider3" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas3" class="view-canvas"></canvas></div>
@@ -115,7 +119,7 @@
     <div id="screen5" class="screen">
         <h2>5. 8 Dishas / Astro Chakra</h2>
         <div class="controls-card">
-            <label><span>🔍 Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(3, this.value)"></label>
+            <label><span>🔍 Grid Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(3, this.value)"></label>
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider4" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas4" class="view-canvas"></canvas></div>
@@ -125,7 +129,7 @@
     <div id="screen6" class="screen">
         <h2>6. Recommended Colors</h2>
         <div class="controls-card">
-            <label><span>🔍 Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(4, this.value)"></label>
+            <label><span>🔍 Grid Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(4, this.value)"></label>
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider5" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas5" class="view-canvas"></canvas></div>
@@ -135,7 +139,7 @@
     <div id="screen7" class="screen">
         <h2>7. Colors to Avoid</h2>
         <div class="controls-card">
-            <label><span>🔍 Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(5, this.value)"></label>
+            <label><span>🔍 Grid Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(5, this.value)"></label>
             <label><span>🔄 Rotate:</span> <input type="range" id="degSlider6" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
         </div>
         <div class="canvas-container"><canvas id="canvas6" class="view-canvas"></canvas></div>
@@ -279,7 +283,7 @@
     function undoPoint() { points.pop(); renderCanvas('canvas1', 0); }
     function clearPoints() { points = []; renderCanvas('canvas1', 0); }
 
-    // 🔥 THE MAGIC GEOMETRY DRAWING FUNCTIONS 🔥
+    // 🔥 GEOMETRY DRAWING FUNCTIONS 🔥
     function draw16Zones(ctx, size) {
         let radius = size / 2;
         let zones = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
@@ -300,29 +304,23 @@
     function draw45Devtas(ctx, size) {
         let step = size / 9;
         let startX = -size / 2; let startY = -size / 2;
-        ctx.strokeStyle = "rgba(0,0,0,0.6)"; ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgba(0,0,0,0.8)"; ctx.lineWidth = 2;
         
-        // Vastu Purusha Mandala 9x9 Grid
         for(let i=0; i<=9; i++) {
             ctx.beginPath(); ctx.moveTo(startX + i*step, startY); ctx.lineTo(startX + i*step, startY + size); ctx.stroke();
             ctx.beginPath(); ctx.moveTo(startX, startY + i*step); ctx.lineTo(startX + size, startY + i*step); ctx.stroke();
         }
-        // Brahma Sthan
-        ctx.fillStyle = "rgba(255, 215, 0, 0.5)"; ctx.fillRect(startX + 3*step, startY + 3*step, 3*step, 3*step);
+        
+        ctx.fillStyle = "rgba(255, 215, 0, 0.4)"; ctx.fillRect(startX + 3*step, startY + 3*step, 3*step, 3*step);
         ctx.fillStyle = "#d32f2f"; ctx.font = "bold 20px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
         ctx.fillText("Brahma (45)", 0, 0);
         
-        // Diagonals
         ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(startX+size, startY+size); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(startX+size, startY); ctx.lineTo(startX, startY+size); ctx.stroke();
 
         ctx.fillStyle = "#111"; ctx.font = "bold 14px Arial";
-        ctx.fillText("Aryama (E)", step*2, 0); ctx.fillText("Mitra (W)", -step*2, 0);
-        ctx.fillText("Vivaswan (S)", 0, step*2); ctx.fillText("Bhudhar (N)", 0, -step*2);
-        
-        ctx.font = "12px Arial"; ctx.fillStyle = "#00f";
-        ctx.fillText("Surya", size/2 - step/2, -step*1.5); ctx.fillText("Varun", -size/2 + step/2, 0);
-        ctx.fillText("Yama", 0, size/2 - step/2); ctx.fillText("Soma", 0, -size/2 + step/2);
+        ctx.fillText("Aryama", step*2.5, 0); ctx.fillText("Mitra", -step*2.5, 0);
+        ctx.fillText("Vivaswan", 0, step*2.5); ctx.fillText("Bhudhar", 0, -step*2.5);
     }
 
     function draw8Dishas(ctx, size) {
@@ -345,7 +343,6 @@
     function drawColorTherapy(ctx, size, isRecommended) {
         let radius = size / 2;
         let zones = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-        // Elemental Colors Logic
         let recColors = ["#2196F3", "#2196F3", "#2196F3", "#4CAF50", "#4CAF50", "#4CAF50", "#F44336", "#F44336", "#F44336", "#FFEB3B", "#FFEB3B", "#9E9E9E", "#9E9E9E", "#9E9E9E", "#9E9E9E", "#2196F3"];
         let avoidColors = ["#F44336", "#F44336", "#F44336", "#9E9E9E", "#9E9E9E", "#9E9E9E", "#2196F3", "#2196F3", "#2196F3", "#4CAF50", "#4CAF50", "#F44336", "#F44336", "#F44336", "#F44336", "#F44336"];
         let colors = isRecommended ? recColors : avoidColors;
@@ -355,14 +352,14 @@
             let startAngle = (i * 22.5 - 11.25 - 90) * Math.PI / 180;
             let endAngle = ((i + 1) * 22.5 - 11.25 - 90) * Math.PI / 180;
             ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, radius, startAngle, endAngle); ctx.closePath();
-            ctx.fillStyle = colors[i] + "88"; // 53% opacity for rich color
+            ctx.fillStyle = colors[i] + "99"; // High Opacity
             ctx.fill(); ctx.strokeStyle = "#333"; ctx.stroke();
             
             let midAngle = (startAngle + endAngle) / 2;
             let textX = Math.cos(midAngle) * (radius * 0.85); let textY = Math.sin(midAngle) * (radius * 0.85);
             ctx.save(); ctx.translate(textX, textY); ctx.rotate(midAngle + Math.PI/2);
             ctx.fillStyle = "#fff"; ctx.font = "bold 14px Arial"; 
-            ctx.shadowColor="black"; ctx.shadowBlur=3; ctx.fillText(zones[i], 0, 0); ctx.restore();
+            ctx.shadowColor="black"; ctx.shadowBlur=4; ctx.fillText(zones[i], 0, 0); ctx.restore();
         }
     }
 
@@ -373,6 +370,7 @@
         ctx.clearRect(0, 0, CANVAS_RES, CANVAS_RES);
         ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, CANVAS_RES, CANVAS_RES); 
         
+        // 1. Draw Map First
         if (mapImage) { ctx.globalAlpha = 0.5; ctx.drawImage(mapImage, 0, 0, CANVAS_RES, CANVAS_RES); ctx.globalAlpha = 1.0; }
 
         let cx = 0, cy = 0;
@@ -381,15 +379,28 @@
             cx /= points.length; cy /= points.length;
         }
 
+        // 🔥 THE MAGIC: CANVAS CLIPPING (Chakra Sirf Plot ke Andar dikhega) 🔥
         if(chakraIndex > 0 && points.length >= 3) {
             let maxDist = 0;
             points.forEach(p => { let d = Math.sqrt(Math.pow(p.x - cx, 2) + Math.pow(p.y - cy, 2)); if(d > maxDist) maxDist = d; });
+            
+            // Base size covers the entire polygon properly
             let cSize = maxDist * 2.5; 
             if(cSize < 200) cSize = 200; 
             cSize *= (chakraScales[chakraIndex] || 1);
 
-            // 🔥 GEOMETRY MAGIC APPLIED HERE 🔥
             ctx.save();
+            
+            // 2. Create the clipping mask using User's Dots
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            for(let i=1; i<points.length; i++) {
+                ctx.lineTo(points[i].x, points[i].y);
+            }
+            ctx.closePath();
+            ctx.clip(); // <--- CHAKRA AB BAHAR NAHI JAYEGA!
+
+            // 3. Draw the Chakra inside the clip
             ctx.translate(cx, cy); 
             ctx.rotate(degree * Math.PI / 180); 
             
@@ -402,6 +413,7 @@
             ctx.restore();
         }
 
+        // 4. Draw Plot Lines & Dots on top (so they are visible)
         if(points.length > 0) {
             ctx.strokeStyle = '#4caf50'; ctx.lineWidth = 6; ctx.beginPath();
             ctx.moveTo(points[0].x, points[0].y);
