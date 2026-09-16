@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Advanced Vastu & Astro Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 0; overflow-x: hidden; }
+        .screen { display: none; padding: 10px; text-align: center; }
+        .active { display: block; }
+        
+        .input-group { margin: 10px auto; max-width: 400px; text-align: left; background: #1e1e1e; padding: 15px; border-radius: 8px; border: 1px solid #333; }
+        .input-group label { display: block; font-size: 14px; margin-bottom: 5px; color: #4caf50; font-weight: bold; }
+        .input-group input { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #555; background: #222; color: #fff; box-sizing: border-box; font-size: 16px; margin-bottom: 10px; }
+        
+        .canvas-container { width: 98vw; height: 98vw; max-width: 800px; max-height: 800px; margin: 10px auto; position: relative; border: 2px solid #4caf50; background: #1a1a1a; border-radius: 8px; }
+        canvas.view-canvas { width: 100%; height: 100%; display: block; touch-action: none; background: transparent; }
+        
+        button { padding: 12px; margin: 5px; font-size: 16px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; background: #4caf50; color: white; }
+        button:hover { background: #45a049; }
+        .nav-buttons { margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        
+        .controls-card { background: #2c2c2c; padding: 12px; margin: 10px auto; border-radius: 10px; max-width: 95vw; }
+        .controls-card label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; color: #ffeb3b; }
+        .controls-card input[type="range"] { width: 100%; margin-bottom: 12px; }
+        
+        .file-upload-btn { background: #2196F3; flex: 1; min-width: 140px; }
+        .geo-btn { background: #ff9800; width: 100%; margin-top: 5px; }
+
+        /* Report Styles for Print */
+        #report-preview { background: #222; padding: 10px; margin-top: 15px; border-radius: 8px; overflow-y: scroll; height: 50vh; }
+        .report-page { background: #fff; color: #000; width: 100%; max-width: 210mm; margin: 0 auto 20px auto; padding: 20px; box-sizing: border-box; box-shadow: 0 4px 8px rgba(0,0,0,0.5); text-align: center; }
+        .report-header { border-bottom: 2px solid #d32f2f; padding-bottom: 10px; margin-bottom: 20px; }
+        .report-header h1 { margin: 0; color: #d32f2f; font-size: 28px; }
+        .client-info { text-align: left; font-size: 14px; line-height: 1.6; margin-bottom: 20px; background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #eee; }
+        .numerology-box { background: #e8f5e9; border: 1px solid #4caf50; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; }
+        .map-img { width: 100%; max-width: 600px; border: 2px solid #333; margin-top: 10px; }
+        .page-title { color: #d32f2f; font-size: 22px; margin: 15px 0; }
+
+        @media print {
+            body { background: white; margin: 0; padding: 0; }
+            body * { visibility: hidden; }
+            #report-preview, #report-preview * { visibility: visible; }
+            #report-preview { position: absolute; left: 0; top: 0; width: 100%; height: auto; overflow: visible; background: transparent; padding: 0; margin: 0; }
+            .report-page { box-shadow: none; border: none; margin: 0; padding: 10mm; page-break-after: always; min-height: 297mm; }
+            .nav-buttons { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="renderCanvas" width="1000" height="1000" style="display: none;"></canvas>
+
+    <!-- Screen 1: Client Info & Astrology Details -->
+    <div id="screen1" class="screen active">
+        <h2>1. Client Details</h2>
+        <div class="input-group">
+            <label>Client Name:</label>
+            <input type="text" id="clientName" placeholder="Enter Full Name">
+            
+            <label>Date of Birth:</label>
+            <input type="date" id="clientDob">
+            
+            <label>Time of Birth:</label>
+            <input type="time" id="clientTime">
+            
+            <label>Place of Birth / Property Location:</label>
+            <input type="text" id="clientPlace" placeholder="Enter City/Location">
+            <button class="geo-btn" onclick="autoDetectLocation()">📍 Auto Detect Location</button>
+        </div>
+        <div class="nav-buttons">
+            <button onclick="nextScreen(2)">Next: Plot Setup ➡</button>
+        </div>
+    </div>
+
+    <!-- Screen 2: Plot Setup -->
+    <div id="screen2" class="screen">
+        <h2>2. Plot & Map Setup</h2>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 10px;">
+            <input type="file" id="mapUpload" accept="image/*" style="display:none;" onchange="loadMap(event)">
+            <button class="file-upload-btn" onclick="document.getElementById('mapUpload').click()">🖼️ Upload Map</button>
+        </div>
+        <div class="input-group" style="padding: 10px; margin-bottom: 10px;">
+            <label>Plot Degree:</label>
+            <input type="number" id="plotDegree" placeholder="Deg" value="0" oninput="setDegree(this.value)">
+        </div>
+        <div class="canvas-container"><canvas id="canvas1" class="view-canvas"></canvas></div>
+        <div class="nav-buttons">
+            <button onclick="undoPoint()" style="background:#e91e63;">↩ Undo</button>
+            <button onclick="clearPoints()" style="background:#f44336;">🗑️ Clear</button>
+            <br>
+            <button onclick="nextScreen(1)">⬅ Back</button>
+            <button onclick="nextScreen(3)" style="background:#4caf50;">Next: 16 Zones ➡</button>
+        </div>
+    </div>
+
+    <!-- Screen 3: 16 Zones -->
+    <div id="screen3" class="screen">
+        <h2>3. 16 Vastu Zones</h2>
+        <div class="controls-card">
+            <label><span>🔍 Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(1, this.value)"></label>
+            <label><span>🔄 Rotate:</span> <input type="range" id="degSlider2" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
+        </div>
+        <div class="canvas-container"><canvas id="canvas2" class="view-canvas"></canvas></div>
+        <div class="nav-buttons"><button onclick="nextScreen(2)">⬅ Back</button><button onclick="nextScreen(4)">Next: 45 Devtas ➡</button></div>
+    </div>
+
+    <!-- Screen 4: 45 Devtas -->
+    <div id="screen4" class="screen">
+        <h2>4. 45 Vastu Devtas</h2>
+        <div class="controls-card">
+            <label><span>🔍 Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(2, this.value)"></label>
+            <label><span>🔄 Rotate:</span> <input type="range" id="degSlider3" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
+        </div>
+        <div class="canvas-container"><canvas id="canvas3" class="view-canvas"></canvas></div>
+        <div class="nav-buttons"><button onclick="nextScreen(3)">⬅ Back</button><button onclick="nextScreen(5)">Next: 8 Dishas ➡</button></div>
+    </div>
+
+    <!-- Screen 5: 8 Dishas / Astro -->
+    <div id="screen5" class="screen">
+        <h2>5. 8 Dishas / Astro Chakra</h2>
+        <div class="controls-card">
+            <label><span>🔍 Size:</span> <input type="range" min="0.2" max="5" step="0.1" value="1" oninput="updateScale(3, this.value)"></label>
+            <label><span>🔄 Rotate:</span> <input type="range" id="degSlider4" min="0" max="360" step="1" value="0" oninput="setDegree(this.value)"></label>
+        </div>
+        <div class="canvas-container"><canvas id="canvas4" class="view-canvas"></canvas></div>
+        <div class="nav-buttons"><button onclick="nextScreen(4)">⬅ Back</button><button onclick="nextScreen(6)">Generate Report ➡</button></div>
+    </div>
+
+    <!-- Screen 6: Final Report -->
+    <div id="screen6" class="screen">
+        <h2>6. Final Vastu Evaluation Report</h2>
+        <p style="font-size: 14px; color:#aaa;">Click Print/Save PDF below.</p>
+
+        <div class="nav-buttons" style="margin-bottom: 20px;">
+            <button onclick="window.print()" style="background: #ff9800; font-size: 18px; padding: 15px 30px; width: 100%; max-width: 300px;">🖨️ Print / Save PDF</button>
+            <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center; width: 100%;">
+                <button onclick="nextScreen(5)">⬅ Back</button>
+                <button onclick="nextScreen(1)" style="background: #607d8b;">Start Over</button>
+            </div>
+        </div>
+
+        <div id="report-preview"></div>
+    </div>
+
+<script>
+    let currentScreen = 1;
+    let points = [];
+    let degree = 0;
+    let mapImage = null; 
+    let draggingPointIndex = -1;
+    const CANVAS_RES = 1000; 
+    let chakraScales = [1, 1, 1, 1]; 
+
+    // CHAKRA IMAGES: User must upload these exact names to GitHub
+    const chakraImages = [null, new Image(), new Image(), new Image()];
+    chakraImages[1].src = "16_zones.png";
+    chakraImages[2].src = "45_devtas.png"; 
+    chakraImages[3].src = "8_dishas.png";
+
+    for(let i=1; i<=4; i++) {
+        let c = document.getElementById('canvas'+i);
+        if(c) { c.width = CANVAS_RES; c.height = CANVAS_RES; }
+    }
+    const c1 = document.getElementById('canvas1');
+
+    // Auto Location Logic
+    function autoDetectLocation() {
+        const placeInput = document.getElementById('clientPlace');
+        placeInput.value = "Detecting...";
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                try {
+                    let lat = position.coords.latitude;
+                    let lon = position.coords.longitude;
+                    let res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                    let data = await res.json();
+                    let city = data.address.city || data.address.town || data.address.state || "Location Detected";
+                    placeInput.value = city;
+                } catch(e) {
+                    placeInput.value = position.coords.latitude.toFixed(2) + ", " + position.coords.longitude.toFixed(2);
+                }
+            }, () => { placeInput.value = "Permission Denied"; });
+        } else {
+            placeInput.value = "Geolocation not supported";
+        }
+    }
+
+    // Numerology Calculator
+    function reduceNum(num) {
+        if(num === 0) return 0;
+        let sum = num % 9;
+        return sum === 0 ? 9 : sum;
+    }
+    function calculateNumerology() {
+        let dobStr = document.getElementById('clientDob').value;
+        if(!dobStr) return { mulank: 'N/A', bhagyank: 'N/A' };
+        let parts = dobStr.split('-');
+        let day = parseInt(parts[2]);
+        let totalStr = parts.join('');
+        let total = 0;
+        for(let i=0; i<totalStr.length; i++) total += parseInt(totalStr[i]);
+        return { mulank: reduceNum(day), bhagyank: reduceNum(total) };
+    }
+
+    function setDegree(val) {
+        if (val === "") val = 0;
+        degree = parseInt(val);
+        document.getElementById('plotDegree').value = degree;
+        for(let i=2; i<=4; i++) {
+            let slider = document.getElementById('degSlider'+i);
+            if(slider && slider.value != degree) slider.value = degree;
+        }
+        if(currentScreen >= 2 && currentScreen <= 5) renderCanvas('canvas'+(currentScreen-1), currentScreen - 2);
+    }
+
+    function loadMap(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            mapImage = new Image();
+            mapImage.onload = function() { renderCanvas('canvas1', 0); }
+            mapImage.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+
+    function nextScreen(num) {
+        document.getElementById('screen'+currentScreen).classList.remove('active');
+        currentScreen = num;
+        document.getElementById('screen'+currentScreen).classList.add('active');
+        if (num >= 2 && num <= 5) {
+            renderCanvas('canvas'+(num-1), num - 2);
+        } else if (num === 6) {
+            buildFinalReport(); 
+        }
+    }
+
+    function updateScale(chakraIndex, val) {
+        chakraScales[chakraIndex] = parseFloat(val);
+        renderCanvas('canvas' + (chakraIndex + 1), chakraIndex);
+    }
+
+    // Drawing Logic (Canvas 1)
+    function getPointerPos(e, targetCanvas) {
+        const rect = targetCanvas.getBoundingClientRect();
+        let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: (clientX - rect.left) * (targetCanvas.width / rect.width), y: (clientY - rect.top) * (targetCanvas.height / rect.height) };
+    }
+
+    function handleStart(e) {
+        if(currentScreen !== 2) return;
+        e.preventDefault();
+        const pos = getPointerPos(e, c1);
+        draggingPointIndex = -1;
+        for (let i = 0; i < points.length; i++) {
+            let dx = pos.x - points[i].x; let dy = pos.y - points[i].y;
+            if (Math.sqrt(dx*dx + dy*dy) < 80) { draggingPointIndex = i; break; }
+        }
+        if (draggingPointIndex === -1) { points.push(pos); draggingPointIndex = points.length - 1; }
+        renderCanvas('canvas1', 0);
+    }
+
+    function handleMove(e) {
+        if (currentScreen === 2 && draggingPointIndex !== -1) {
+            e.preventDefault();
+            points[draggingPointIndex] = getPointerPos(e, c1);
+            renderCanvas('canvas1', 0);
+        }
+    }
+    function handleEnd(e) { draggingPointIndex = -1; }
+    
+    c1.addEventListener('mousedown', handleStart); c1.addEventListener('mousemove', handleMove); c1.addEventListener('mouseup', handleEnd); c1.addEventListener('mouseleave', handleEnd);
+    c1.addEventListener('touchstart', handleStart, {passive: false}); c1.addEventListener('touchmove', handleMove, {passive: false}); c1.addEventListener('touchend', handleEnd);
+
+    function undoPoint() { points.pop(); renderCanvas('canvas1', 0); }
+    function clearPoints() { points = []; renderCanvas('canvas1', 0); }
+
+    function renderCanvas(canvasId, chakraIndex) {
+        const cvs = document.getElementById(canvasId);
+        if(!cvs) return;
+        const ctx = cvs.getContext('2d');
+        ctx.clearRect(0, 0, CANVAS_RES, CANVAS_RES);
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, CANVAS_RES, CANVAS_RES); 
+        
+        if (mapImage) { ctx.globalAlpha = 0.5; ctx.drawImage(mapImage, 0, 0, CANVAS_RES, CANVAS_RES); ctx.globalAlpha = 1.0; }
+
+        let cx = 0, cy = 0;
+        if(points.length > 0) {
+            points.forEach(p => { cx += p.x; cy += p.y; });
+            cx /= points.length; cy /= points.length;
+        }
+
+        if(chakraIndex > 0 && points.length >= 3) {
+            let img = chakraImages[chakraIndex];
+            if(img && img.complete) {
+                let maxDist = 0;
+                points.forEach(p => { let d = Math.sqrt(Math.pow(p.x - cx, 2) + Math.pow(p.y - cy, 2)); if(d > maxDist) maxDist = d; });
+                let cSize = maxDist * 2.5; 
+                if(cSize < 200) cSize = 200; 
+                cSize *= (chakraScales[chakraIndex] || 1);
+
+                ctx.save();
+                ctx.translate(cx, cy); 
+                ctx.rotate(degree * Math.PI / 180); 
+                ctx.drawImage(img, -cSize/2, -cSize/2, cSize, cSize); 
+                ctx.restore();
+            }
+        }
+
+        if(points.length > 0) {
+            ctx.strokeStyle = '#4caf50'; ctx.lineWidth = 6; ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            points.forEach(p => ctx.lineTo(p.x, p.y));
+            if(points.length > 2) ctx.closePath(); ctx.stroke();
+
+            points.forEach((p, i) => {
+                ctx.fillStyle = '#ff5722'; ctx.beginPath(); ctx.arc(p.x, p.y, 12, 0, Math.PI*2); ctx.fill(); 
+                ctx.fillStyle = '#000'; ctx.font = "bold 24px Arial"; ctx.fillText("P"+(i+1), p.x + 15, p.y - 15);
+            });
+
+            if (points.length >= 3) {
+                ctx.fillStyle = '#00bcd4'; ctx.beginPath(); ctx.arc(cx, cy, 15, 0, Math.PI*2); ctx.fill();
+                ctx.font = "bold 28px Arial"; ctx.fillText('Brahma Sthan', cx+20, cy);
+            }
+        }
+    }
+
+    function buildFinalReport() {
+        const previewArea = document.getElementById('report-preview');
+        previewArea.innerHTML = '';
+        
+        let cName = document.getElementById('clientName').value || "Client Name";
+        let cDob = document.getElementById('clientDob').value || "N/A";
+        let cTime = document.getElementById('clientTime').value || "N/A";
+        let cPlace = document.getElementById('clientPlace').value || "N/A";
+        let numero = calculateNumerology();
+        let d = new Date();
+        let dateStr = d.toLocaleDateString();
+
+        const renderCvs = document.getElementById('renderCanvas');
+        const rCtx = renderCvs.getContext('2d');
+        const titles = ["16 Vastu Zones", "45 Vastu Devtas", "8 Dishas / Astro Chakra"];
+
+        for(let i=1; i<=3; i++) {
+            // Re-render source cleanly
+            let sourceCanvas = document.getElementById('canvas'+(i+1));
+            rCtx.fillStyle = '#ffffff'; rCtx.fillRect(0, 0, 1000, 1000);
+            rCtx.drawImage(sourceCanvas, 0, 0, 1000, 1000);
+            let imgData = renderCvs.toDataURL('image/jpeg', 0.9);
+
+            let pageHtml = `
+            <div class="report-page">
+                <div class="report-header">
+                    <h1>ADVANCED VASTU EVALUATION REPORT</h1>
+                    <p style="color: #666; margin: 5px 0;">Accurate Combination of Dasha & Disha</p>
+                </div>
+                
+                ${i === 1 ? `
+                <div class="client-info">
+                    <strong>CLIENT NAME:</strong> ${cName} <br>
+                    <strong>DOB:</strong> ${cDob} &nbsp;|&nbsp; <strong>TIME:</strong> ${cTime} <br>
+                    <strong>LOCATION:</strong> ${cPlace} <br>
+                    <strong>PLOT DEGREE:</strong> ${degree}° &nbsp;|&nbsp; <strong>DATE:</strong> ${dateStr}
+                </div>
+                <div class="numerology-box">
+                    🔮 Numerology Insights:<br>
+                    Psychic Number (Mulank): <span style="color:#d32f2f; font-size:18px;">${numero.mulank}</span> &nbsp; | &nbsp;
+                    Destiny Number (Bhagyank): <span style="color:#d32f2f; font-size:18px;">${numero.bhagyank}</span>
+                </div>
+                ` : ''}
+
+                <h2 class="page-title">${titles[i-1]}</h2>
+                <img src="${imgData}" class="map-img" />
+                <p style="margin-top: 20px; font-size: 12px; color: #888;">Report Generated Automatically by VastuExpert App</p>
+            </div>`;
+            
+            previewArea.innerHTML += pageHtml;
+        }
+    }
+</script>
+</body>
+</html>
