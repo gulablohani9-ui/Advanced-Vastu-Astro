@@ -1,0 +1,63 @@
+name: Build Android APK
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    - name: Prepare Web Directory
+      run: |
+        mkdir -p www
+        cp index.html www/
+        cp *.png www/ || true
+        cp *.jpg www/ || true
+
+    - name: Fix Capacitor Config
+      run: |
+        echo '{
+          "appId": "com.vastu.advanced",
+          "appName": "VastuExpert",
+          "webDir": "www"
+        }' > capacitor.config.json
+
+    - name: Clean and Install Fresh Dependencies
+      run: |
+        rm -f package.json package-lock.json
+        npm init -y
+        npm install @capacitor/core@5 @capacitor/android@5
+        npm install -D @capacitor/cli@5
+
+    - name: Add Android Platform
+      run: npx cap add android
+
+    - name: Sync Android
+      run: npx cap sync android
+
+    - name: Build Android APK
+      run: |
+        cd android
+        chmod +x gradlew
+        ./gradlew assembleDebug
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Vastu-Advanced-APK
+        path: android/app/build/outputs/apk/debug/app-debug.apk
